@@ -1,0 +1,39 @@
+global
+    log     127.0.0.1 local0
+    log     127.0.0.1 local1 notice
+    maxconn 4096
+
+defaults
+    log     global
+    mode    http
+    option  tcplog
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+<% entries.each do |entry| -%>
+<% if entry.protocol == 'tcp' -%>
+listen <%= entry.key %> :<%= entry.port %>
+    mode tcp
+    option tcplog
+    balance roundrobin
+<% entry.backends.each_with_index do |backend, index| -%>
+    server <%= [entry.key, index.to_s].join('-') %> <%= backend.ip_port %> check
+<% end -%>
+<% elsif entry.protocol == 'http' %>
+frontend http-<%= entry.key %>
+    mode tcp
+    bind :<%= entry.port %>
+<% entry.host_providers.each do |host_provider| -%>
+    use_backend <%= host_provider.key %> if { hdr_end(host) -i <%= host_provider.hostname %> }
+<% end -%>
+    default_backend <%= entry.default_provider_key %>
+<% entry.host_providers.each do |host_provider| %>
+backend <%= host_provider.key %>
+    mode tcp
+<% host_provider.backends.each_with_index do |backend, index| -%>
+    server <%= [host_provider.key, index.to_s].join('-') %> <%= backend.ip_port %>
+<% end -%>
+<% end #end each -%>
+<% end #end if -%>
+<% end #end each -%>

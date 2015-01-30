@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'corelb'
 
 describe Corelb do
   it "should have a VERSION constant" do
