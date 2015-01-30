@@ -1,0 +1,27 @@
+= corelb
+
+* {Homepage}[https://rubygems.org/gems/corelb]
+* {Documentation}[http://rubydoc.info/gems/corelb/frames]
+* {Email}[mailto:nolane at gmail.com]
+
+== Description
+
+TODO: Description
+
+== Features
+
+== Examples
+
+  require 'corelb'
+
+== Requirements
+
+== Install
+
+  $ gem install corelb
+
+== Copyright
+
+Copyright (c) 2015 Nolan Evans
+
+See LICENSE.txt for details.
